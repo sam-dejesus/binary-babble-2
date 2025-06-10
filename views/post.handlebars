@@ -1,0 +1,31 @@
+{{!-- views/post.handlebars file --}}
+<main class="container mt-5">
+  <article>
+    <h1 class="title">{{title}}</h1>
+    <p class="titleDate">Created by: {{user.username}} | Date: {{format_date createdAt}}</p>
+    <p class="postBlog">{{content}}</p>
+  </article>
+  {{#if logged_in}}
+    <form class="new-comment-form" class="mb-3">
+      <div class="mb-3">
+        {{!-- <label for="comment" class="form-label">Add Comment:</label> --}}
+        <textarea
+          class="form-control"
+          id="content-new-comment"
+          rows="3"
+          placeholder="Add a comment..."
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-outline-info submitBtn">Submit</button>
+    </form>
+  {{/if}}
+  <div class="commentBox" >
+  <h2>Comment History:</h2>
+  {{#each comments}}
+    <div class="commentDiv mb-3 ">
+      <p class="commentText">{{comment_text}}</p>
+      <p class="commentDate" >By {{user.username}} on {{format_date createdAt}}</p>
+    </div>
+  {{/each}}
+  </div>
+</main>
