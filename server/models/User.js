@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
 class User extends Model {
-  checkPassword(loginPw) {
+  isCorrectPassword(loginPw) {
     return loginPw === this.password;
   }
 }

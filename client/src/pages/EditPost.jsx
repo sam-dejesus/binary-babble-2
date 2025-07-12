@@ -1,13 +1,34 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { UPDATE_POST, DELETE_POST } from '../graphQL/mutations';
+import { useNavigate } from 'react-router-dom';
 
-const EditPost = ({ initialTitle, initialContent, onUpdate, onDelete }) => {
+const EditPost = ({ postId, initialTitle, initialContent }) => {
   const [title, setTitle] = useState(initialTitle || '');
   const [content, setContent] = useState(initialContent || '');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [updatePost] = useMutation(UPDATE_POST);
+  const [deletePost] = useMutation(DELETE_POST);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onUpdate) {
-      onUpdate({ title, content });
+    try {
+      await updatePost({
+        variables: { id: postId, title, content },
+      });
+      navigate(`/post/${postId}`);
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deletePost({ variables: { id: postId } });
+      navigate('/');
+    } catch (err) {
+      console.error('Delete failed:', err);
     }
   };
 
@@ -21,9 +42,9 @@ const EditPost = ({ initialTitle, initialContent, onUpdate, onDelete }) => {
             type="text"
             className="form-control"
             id="title-update-post"
-            placeholder="Enter post title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter post title"
           />
         </div>
         <div className="mb-3">
@@ -32,19 +53,16 @@ const EditPost = ({ initialTitle, initialContent, onUpdate, onDelete }) => {
             className="form-control"
             id="content-update-post"
             rows="3"
-            placeholder="Enter post content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            placeholder="Enter post content"
           />
         </div>
-        <button type="submit" id="update-post" className="btn btn-outline-info">
-          Update Post
-        </button>
+        <button type="submit" className="btn btn-outline-info">Update Post</button>
         <button
           type="button"
-          id="delete-post"
           className="btn btn-outline-danger"
-          onClick={onDelete}
+          onClick={handleDelete}
           style={{ marginLeft: '10px' }}
         >
           Delete Post
