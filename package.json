@@ -1,0 +1,15 @@
+{
+  "name": "binary-babble-2",
+  "version": "1.0.0",
+  "description": "- refactor  - implement cart item model - create cart - valedation and experation of cart items - implement picture storage - implement stripe - polish, overhall UI and improve UX",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"cd server && npm run watch\" \"cd client && npm start\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
