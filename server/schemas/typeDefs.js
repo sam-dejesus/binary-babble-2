@@ -5,6 +5,7 @@ const typeDefs = gql`
     id: ID!
     username: String!
     email: String!
+    posts: [Post]
   }
 
   type Auth {
@@ -16,8 +17,8 @@ const typeDefs = gql`
     id: ID!
     title: String!
     content: String!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: String
+    updatedAt: String
     author: User!
   }
 
@@ -31,6 +32,7 @@ const typeDefs = gql`
   }
 
   type Query {
+    userById(id: ID!): User
     me: User
 
     getPost(id: ID!): Post

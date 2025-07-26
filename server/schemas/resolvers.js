@@ -4,29 +4,33 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
+    userById: async (parent, { id }) => {
+      return await User.findByPk(id, { attributes: { exclude: ['password'] } });
+    },
+
     me: async (parent, args, context) => {
-      if (context.user) {
-        const userData = await User.findByPk(context.user.id, {
-          attributes: { exclude: ['password'] },
-        });
-        return userData;
-      }
-      throw new AuthenticationError('Not logged in');
-    },
+  if (context.user) {
+    console.log("context.user:", context.user);
+    const userData = await User.findByPk(context.user.id, {
+      attributes: { exclude: ['password'] },
+    });
+    console.log("userData from DB:", userData);
+    return userData;
+  }
+  throw new AuthenticationError('Not logged in');
+},
 
-    // Fetch a single post by ID
     getPost: async (parent, { id }) => {
-      return await Post.findByPk(id);
+      const post = await Post.findByPk(id);
+      return post;
     },
 
-    // Fetch all posts (could add pagination later)
     getAllPosts: async () => {
       return await Post.findAll({
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
       });
     },
 
-    // Fetch comments for a specific post
     getCommentsByPost: async (parent, { postId }) => {
       return await Comment.findAll({
         where: { post_id: postId },
@@ -55,7 +59,6 @@ const resolvers = {
       return { token, user };
     },
 
-    // Create a new post (requires logged-in user)
     createPost: async (parent, { title, content }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Not logged in');
@@ -67,7 +70,6 @@ const resolvers = {
       });
     },
 
-    // Add a comment to a post (requires logged-in user)
     addComment: async (parent, { postId, comment_text }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Not logged in');
@@ -79,42 +81,52 @@ const resolvers = {
       });
     },
 
-updatePost: async (parent, { id, title, content }, context) => {
-  if (!context.user) {
-    throw new AuthenticationError('Not logged in');
-  }
+    updatePost: async (parent, { id, title, content }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not logged in');
+      }
 
-  const post = await Post.findByPk(id);
+      const post = await Post.findByPk(id);
 
-  if (!post || post.user_id !== context.user.id) {
-    throw new AuthenticationError('Not authorized to edit this post');
-  }
+      if (!post || post.user_id !== context.user.id) {
+        throw new AuthenticationError('Not authorized to edit this post');
+      }
 
-  await post.update({ title, content });
-  return post;
-},
+      await post.update({ title, content });
+      return post;
+    },
 
-deletePost: async (parent, { id }, context) => {
-  if (!context.user) {
-    throw new AuthenticationError('Not logged in');
-  }
+    deletePost: async (parent, { id }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not logged in');
+      }
 
-  const post = await Post.findByPk(id);
+      const post = await Post.findByPk(id);
 
-  if (!post || post.user_id !== context.user.id) {
-    throw new AuthenticationError('Not authorized to delete this post');
-  }
+      if (!post || post.user_id !== context.user.id) {
+        throw new AuthenticationError('Not authorized to delete this post');
+      }
 
-  await post.destroy();
-  return true;
-},
+      await post.destroy();
+      return true;
+    },
+  },
 
+  User: {
+    posts: async (user) => {
+      return await Post.findAll({
+        where: { user_id: user.id },
+        order: [['created_at', 'DESC']],
+      });
+    },
   },
 
   Post: {
     author: async (post) => {
       return await User.findByPk(post.user_id);
     },
+    createdAt: (post) => post.created_at,
+    updatedAt: (post) => post.updated_at,
   },
 
   Comment: {
@@ -124,6 +136,8 @@ deletePost: async (parent, { id }, context) => {
     post: async (comment) => {
       return await Post.findByPk(comment.post_id);
     },
+    createdAt: (comment) => comment.created_at,
+    updatedAt: (comment) => comment.updated_at,
   },
 };
 

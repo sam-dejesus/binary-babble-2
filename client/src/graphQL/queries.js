@@ -1,15 +1,23 @@
 // src/graphql/queries.js
 import { gql } from '@apollo/client';
 
+
 export const QUERY_ME = gql`
   query Me {
     me {
       id
       username
       email
+      posts {
+        id
+        title
+        content
+        createdAt
+      }
     }
   }
 `;
+
 
 export const QUERY_ALL_POSTS = gql`
   query GetAllPosts {
@@ -37,3 +45,6 @@ export const QUERY_COMMENTS_BY_POST = gql`
     }
   }
 `;
+
+
+

@@ -1,12 +1,23 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../graphQL/queries'
+import { useNavigate } from "react-router-dom";
+import Auth from '../utils/auth';
 
 
 const Layout = ({ loggedIn }) => {
+  const navigate = useNavigate();
+
+  const logoutCall = (event) => {
+    event.preventDefault();
+    navigate("/")
+    Auth.logout();
+  };
+
+  const { loading, error, data } = useQuery(QUERY_ME);
   return (
     <div className="bg-dark text-white min-vh-100 d-flex flex-column">
-      {/* Head tags are handled in index.html, but Bootstrap can be imported here or in index.html */}
-      
       <header>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container-fluid">
@@ -32,11 +43,9 @@ const Layout = ({ loggedIn }) => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">Dashboard</Link>
                 </li>
-                {loggedIn ? (
+                {data ? (
                   <li className="nav-item">
-                    <button className="nav-link btn btn-link" onClick={() => {
-                      // handle logout logic here
-                    }}>
+                    <button className="nav-link btn btn-link" onClick={logoutCall}>
                       Logout
                     </button>
                   </li>
@@ -63,7 +72,7 @@ const Layout = ({ loggedIn }) => {
       <footer className="bg-dark text-white py-3 mt-auto" style={{ position: 'fixed', bottom: 0, width: '100%' }}>
         <div className="container">
           <div className="row justify-content-center">
-            {/* Add footer content here */}
+            
           </div>
         </div>
       </footer>
