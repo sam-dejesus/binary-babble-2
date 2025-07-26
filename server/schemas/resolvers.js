@@ -9,9 +9,9 @@ const resolvers = {
     },
 
     me: async (parent, args, context) => {
-  if (context.user) {
-    console.log("context.user:", context.user);
-    const userData = await User.findByPk(context.user.id, {
+      if (context.user) {
+      console.log("context.user:", context.user);
+      const userData = await User.findByPk(context.user.id, {
       attributes: { exclude: ['password'] },
     });
     console.log("userData from DB:", userData);
@@ -127,6 +127,12 @@ const resolvers = {
     },
     createdAt: (post) => post.created_at,
     updatedAt: (post) => post.updated_at,
+    comments: async (post) => {
+      return await Comment.findAll({
+        where: { post_id: post.id },
+        order: [['created_at', 'ASC']],
+      });
+    }
   },
 
   Comment: {

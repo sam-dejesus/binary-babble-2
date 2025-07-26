@@ -55,7 +55,7 @@ function App() {
           <Route path="homepage" element={<Homepage />}/>
           <Route path='editpost' element={<EditPost />}/>
           <Route path="newpost" element={<NewPost />}/>
-          <Route path="post" element={<Post />}/>
+          <Route path="post/:id" element={<Post />}/>
           <Route path='signup' element={<SignUp />}/>
         </Route>
       </Routes>

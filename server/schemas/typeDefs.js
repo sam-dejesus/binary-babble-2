@@ -17,6 +17,7 @@ const typeDefs = gql`
     id: ID!
     title: String!
     content: String!
+    comments: [Comment]
     createdAt: String
     updatedAt: String
     author: User!
@@ -25,8 +26,8 @@ const typeDefs = gql`
   type Comment {
     id: ID!
     comment_text: String!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: String
+    updatedAt: String
     author: User!
     post: Post!
   }

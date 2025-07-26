@@ -47,4 +47,25 @@ export const QUERY_COMMENTS_BY_POST = gql`
 `;
 
 
+export const GET_POST = gql`
+  query GetPost($id: ID!) {
+    getPost(id: $id) {
+      id
+      author
+      title
+      content
+      comments {
+        id
+        comment_text
+        createdAt
+        author {
+          id
+          username
+        }
+      }
+    }
+  }
+`;
+
+
 
