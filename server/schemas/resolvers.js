@@ -10,11 +10,9 @@ const resolvers = {
 
     me: async (parent, args, context) => {
       if (context.user) {
-      console.log("context.user:", context.user);
       const userData = await User.findByPk(context.user.id, {
       attributes: { exclude: ['password'] },
     });
-    console.log("userData from DB:", userData);
     return userData;
   }
   throw new AuthenticationError('Not logged in');
@@ -59,57 +57,7 @@ const resolvers = {
       return { token, user };
     },
 
-    createPost: async (parent, { title, content }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Not logged in');
-      }
-      return await Post.create({
-        title,
-        content,
-        user_id: context.user.id,
-      });
-    },
-
-    addComment: async (parent, { postId, comment_text }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Not logged in');
-      }
-      return await Comment.create({
-        comment_text,
-        post_id: postId,
-        user_id: context.user.id,
-      });
-    },
-
-    updatePost: async (parent, { id, title, content }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Not logged in');
-      }
-
-      const post = await Post.findByPk(id);
-
-      if (!post || post.user_id !== context.user.id) {
-        throw new AuthenticationError('Not authorized to edit this post');
-      }
-
-      await post.update({ title, content });
-      return post;
-    },
-
-    deletePost: async (parent, { id }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('Not logged in');
-      }
-
-      const post = await Post.findByPk(id);
-
-      if (!post || post.user_id !== context.user.id) {
-        throw new AuthenticationError('Not authorized to delete this post');
-      }
-
-      await post.destroy();
-      return true;
-    },
+  
   },
 
   User: {

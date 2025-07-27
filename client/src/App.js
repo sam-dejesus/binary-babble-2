@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import {
   ApolloClient,
@@ -7,6 +8,7 @@ import {
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
+
 import { setContext } from '@apollo/client/link/context';
 
 import Layout from './components/Layout';
@@ -43,23 +45,34 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
+//  const loggedIn = Boolean(localStorage.getItem('id_token'));
+//   console.log('loggedIn:', loggedIn);  // For debugging
 
+  
 function App() {
+const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('id_token');
+    setLoggedIn(Boolean(token));
+    console.log('loggedIn:', Boolean(token));
+  }, []);
   return (
     <ApolloProvider client={client}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout loggedIn={false} />}>
-          <Route index element={<Login />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="homepage" element={<Homepage />}/>
-          <Route path='editpost' element={<EditPost />}/>
-          <Route path="newpost" element={<NewPost />}/>
-          <Route path="post/:id" element={<Post />}/>
-          <Route path='signup' element={<SignUp />}/>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+
+          <Route path="/" element={<Layout loggedIn={loggedIn} />}>
+            <Route index element={<Login />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="homepage" element={<Homepage />} />
+            <Route path="editpost" element={<EditPost />} />
+            <Route path="newpost" element={<NewPost />} />
+            <Route path="post/:id" element={<Post loggedIn={loggedIn} />} />
+            <Route path="signup" element={<SignUp />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ApolloProvider>
   );
 }

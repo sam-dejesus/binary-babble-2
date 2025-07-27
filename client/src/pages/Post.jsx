@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_POST } from '../graphQL/queries';
+import { ADD_COMMENT } from '../graphQL/mutations';
 
 const Post = ({ loggedIn }) => {
   const { id } = useParams();
-  const { loading, error, data } = useQuery(GET_POST, {
+  const { loading, error, data, refetch } = useQuery(GET_POST, {
     variables: { id }
   });
 
+  const [commentText, setCommentText] = useState('');
+  const [createComment, { error: commentError }] = useMutation(ADD_COMMENT);
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(); // Customize as needed
+    return date.toLocaleDateString();
   };
 
   if (loading) return <p>Loading post...</p>;
@@ -20,30 +24,59 @@ const Post = ({ loggedIn }) => {
   const post = data?.getPost;
 
   if (!post) return <p>Post not found.</p>;
-  console.log("ID from URL:", id);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!commentText.trim()) return;
+
+    try {
+      await createComment({
+        variables: {
+          postId: id,
+          comment_text: commentText
+        }
+      });
+
+      setCommentText('');
+      // Refetch post to update comments
+      refetch();
+    } catch (err) {
+      console.error('Error creating comment:', err);
+    }
+  };
 
   return (
     <main className="container mt-5">
       <article>
         <h1 className="title">{post.title}</h1>
         <p className="titleDate">
-          Created by: {post?.author} | Date: {formatDate(post.createdAt)}
+          Created by: {post?.author?.username} | Date: {formatDate(post.createdAt)}
         </p>
         <p className="postBlog">{post.content}</p>
       </article>
-        <form className="new-comment-form mb-3">
+
+      {loggedIn ? (
+        <form className="new-comment-form mb-3" onSubmit={handleSubmit}>
           <div className="mb-3">
             <textarea
               className="form-control"
               id="content-new-comment"
               rows="3"
               placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              required
             ></textarea>
           </div>
           <button type="submit" className="btn btn-outline-info submitBtn">
             Submit
           </button>
+          {commentError && <p className="text-danger mt-2">{commentError.message}</p>}
         </form>
+      ) : (
+        <p>Please log in to add comments.</p>
+      )}
 
       <div className="commentBox">
         <h2>Comment History:</h2>

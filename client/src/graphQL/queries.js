@@ -51,7 +51,6 @@ export const GET_POST = gql`
   query GetPost($id: ID!) {
     getPost(id: $id) {
       id
-      author
       title
       content
       comments {
