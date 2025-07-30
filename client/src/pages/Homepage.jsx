@@ -9,9 +9,10 @@ const Homepage = () => {
   const posts = data?.getAllPosts || [];
 
   const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
-  };
+  if (!dateStr) return 'No date';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(); // you can customize formatting here
+};
 
   return (
     <main className="container mt-5">
@@ -34,7 +35,7 @@ const Homepage = () => {
                   </div>
                   <div className="card-body text-dark">
                     <p className="card-label">
-                      Created by: {post.author.username} | Date: {formatDate(post.createdAt)}
+                      Created by: {post.author.username} | Date: {formatDate(post.postDateTime)}
                     </p>
                   </div>
                 </div>

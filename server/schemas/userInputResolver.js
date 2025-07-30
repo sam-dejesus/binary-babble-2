@@ -1,4 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
+const DateTime = require('../utils/DateTimeScalar');
 const { User, Post, Comment } = require('../models');
 
 const resolvers = {

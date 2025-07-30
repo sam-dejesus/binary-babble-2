@@ -1,5 +1,6 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User, Post, Comment } = require('../models');
+const DateTime = require('../utils/DateTimeScalar');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -70,6 +71,17 @@ const resolvers = {
   },
 
   Post: {
+    postDateTime(post) {
+      if (!post.post_date || !post.post_time) return null;
+
+      // post_date is a Date object, post_time is string "HH:mm:ss"
+      // Combine into a single ISO string:
+      const datePart = post.post_date.toISOString().split('T')[0]; // "YYYY-MM-DD"
+      const dateTimeString = `${datePart}T${post.post_time}`;
+
+      // Return as Date object
+      return new Date(dateTimeString);
+    },
     author: async (post) => {
       return await User.findByPk(post.user_id);
     },

@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../graphQL/mutations';
+import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const [formState, setFormState] = useState({ email: '', password: '' });
 
-  const [login, { error }] = useMutation(LOGIN_USER);
+  const [loginMutation, { error }] = useMutation(LOGIN_USER);
+  const { login } = useContext(AuthContext); // ✅ use context version
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,12 +20,12 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const { data } = await login({
+      const { data } = await loginMutation({
         variables: { ...formState },
       });
 
-      localStorage.setItem('id_token', data.login.token);
-      navigate('/homepage');
+      login(data.login.token);     // ✅ triggers context + cache refresh
+      navigate('/homepage');       // ✅ navigate after state is updated
     } catch (err) {
       console.error('Login failed:', err);
     }

@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar DateTime
+
   type User {
     id: ID!
     username: String!
@@ -18,8 +20,9 @@ const typeDefs = gql`
     title: String!
     content: String!
     comments: [Comment]
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    postDateTime: DateTime  
     author: User!
   }
 

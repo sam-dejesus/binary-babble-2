@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useParams } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_POST } from '../graphQL/queries';
 import { UPDATE_POST, DELETE_POST } from '../graphQL/mutations';
 import { useNavigate } from 'react-router-dom';
 
 const EditPost = ({ postId, initialTitle, initialContent }) => {
+  const { id } = useParams();
+  const { data} = useQuery(GET_POST, {
+    variables: { id }
+  });
   const [title, setTitle] = useState(initialTitle || '');
   const [content, setContent] = useState(initialContent || '');
   const navigate = useNavigate();
@@ -15,17 +21,18 @@ const EditPost = ({ postId, initialTitle, initialContent }) => {
     e.preventDefault();
     try {
       await updatePost({
-        variables: { id: postId, title, content },
+        variables: { id: id, title, content },
       });
-      navigate(`/post/${postId}`);
+      navigate(`/post/${id}`);
     } catch (err) {
       console.error('Update failed:', err);
     }
+    console.log('submitting with:', { id: id, title, content });
   };
 
   const handleDelete = async () => {
     try {
-      await deletePost({ variables: { id: postId } });
+      await deletePost({ variables: { id: id } });
       navigate('/');
     } catch (err) {
       console.error('Delete failed:', err);

@@ -22,6 +22,17 @@ Post.init(
         len: [1]
       }
     },
+    post_date:{
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    post_time:{
+      type: DataTypes.TIME,
+      allowNull: false
+    },
+    update_date:{
+      type: DataTypes.DATE
+    },
     user_id: {
       type: DataTypes.INTEGER,
       references: {

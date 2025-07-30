@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { QUERY_ME } from '../graphQL/queries'
 import { useNavigate } from "react-router-dom";
 import Auth from '../utils/auth';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 
-const Layout = ({ loggedIn }) => {
+const Layout = () => {
+  const { loggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const logoutCall = (event) => {
@@ -15,7 +16,6 @@ const Layout = ({ loggedIn }) => {
     Auth.logout();
   };
 
-  const { loading, error, data } = useQuery(QUERY_ME);
   return (
     <div className="bg-dark text-white min-vh-100 d-flex flex-column">
       <header>
@@ -37,13 +37,15 @@ const Layout = ({ loggedIn }) => {
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
-                <li className="nav-item">
+                <li className="nav-item">{loggedIn ? (
+                  <Link className="nav-link" to="/homepage">Home</Link>):(
                   <Link className="nav-link" to="/">Home</Link>
+                  )}
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">Dashboard</Link>
                 </li>
-                {data ? (
+                {loggedIn ? (
                   <li className="nav-item">
                     <button className="nav-link btn btn-link" onClick={logoutCall}>
                       Logout
@@ -52,7 +54,7 @@ const Layout = ({ loggedIn }) => {
                 ) : (
                   <>
                     <li className="nav-item">
-                      <Link className="nav-link" to="/login">Login</Link>
+                      <Link className="nav-link" to="/">Login</Link>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" to="/signup">Sign Up</Link>
@@ -66,7 +68,7 @@ const Layout = ({ loggedIn }) => {
       </header>
 
       <main className="container flex-grow-1" style={{ marginBottom: '15vh' }}>
-        <Outlet /> {/* or use props.children if you're not using react-router */}
+        <Outlet /> 
       </main>
 
       <footer className="bg-dark text-white py-3 mt-auto" style={{ position: 'fixed', bottom: 0, width: '100%' }}>
