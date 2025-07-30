@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_POST } from '../graphQL/queries';
 import { ADD_COMMENT } from '../graphQL/mutations';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
-const Post = ({ loggedIn }) => {
+const Post = () => {
+    const { loggedIn } = useContext(AuthContext);
   const { id } = useParams();
   const { loading, error, data, refetch } = useQuery(GET_POST, {
     variables: { id }
