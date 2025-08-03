@@ -1,13 +1,13 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  scalar DateTime
 
   type User {
     id: ID!
     username: String!
     email: String!
     posts: [Post]
+    comments: [Comment]
   }
 
   type Auth {
@@ -19,18 +19,17 @@ const typeDefs = gql`
     id: ID!
     title: String!
     content: String!
-    comments: [Comment]
-    createdAt: DateTime
-    updatedAt: DateTime
-    postDateTime: DateTime  
+    comments: [Comment!]
+    createdAt: String!
+    updatedAt: String!
     author: User!
   }
 
   type Comment {
     id: ID!
     comment_text: String!
-    createdAt: String
-    updatedAt: String
+    createdAt: String!
+    updatedAt: String!
     author: User!
     post: Post!
   }
