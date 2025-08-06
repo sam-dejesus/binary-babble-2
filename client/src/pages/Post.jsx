@@ -5,6 +5,7 @@ import { GET_POST } from '../graphQL/queries';
 import { ADD_COMMENT } from '../graphQL/mutations';
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
+import {format_date} from '../utils/dateFormat'
 
 const Post = () => {
     const { loggedIn } = useContext(AuthContext);
@@ -16,15 +17,12 @@ const Post = () => {
   const [commentText, setCommentText] = useState('');
   const [createComment, { error: commentError }] = useMutation(ADD_COMMENT);
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
-  };
 
   if (loading) return <p>Loading post...</p>;
   if (error) return <p>Error loading post: {error.message}</p>;
 
   const post = data?.getPost;
+  console.log(data);
 
   if (!post) return <p>Post not found.</p>;
 
@@ -54,7 +52,7 @@ const Post = () => {
       <article>
         <h1 className="title">{post.title}</h1>
         <p className="titleDate">
-          Created by: {post?.author?.username} | Date: {formatDate(post.createdAt)}
+          Created by: {post?.author?.username} | Date: {format_date(post.createdAt)}
         </p>
         <p className="postBlog">{post.content}</p>
       </article>
@@ -88,7 +86,7 @@ const Post = () => {
             <div className="commentDiv mb-3" key={index}>
               <p className="commentText">{comment.comment_text}</p>
               <p className="commentDate">
-                By {comment.author?.username} on {formatDate(comment.createdAt)}
+                By {comment.author?.username}{comment.author?.username === post?.author?.username && <span className='text-info'> OP</span>} on {format_date(comment.createdAt)}
               </p>
             </div>
           ))

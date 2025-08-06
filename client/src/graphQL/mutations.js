@@ -1,17 +1,17 @@
 // src/graphql/mutations.js
 import { gql } from '@apollo/client';
 
-export const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        id
-        username
-      }
-    }
-  }
-`;
+// export const LOGIN = gql`
+//   mutation Login($email: String!, $password: String!) {
+//     login(email: $email, password: $password) {
+//       token
+//       user {
+//         id
+//         username
+//       }
+//     }
+//   }
+// `;
 
 export const ADD_USER = gql`
   mutation AddUser($username: String!, $email: String!, $password: String!) {

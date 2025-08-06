@@ -24,7 +24,6 @@ export const QUERY_ALL_POSTS = gql`
     getAllPosts {
       id
       title
-      postDateTime
       content
       createdAt
       author {
@@ -40,6 +39,7 @@ export const QUERY_COMMENTS_BY_POST = gql`
       id
       comment_text
       createdAt
+      updatedAt
       author {
         username
       }
@@ -54,7 +54,11 @@ export const GET_POST = gql`
       id
       title
       content
-      postDateTime
+      createdAt
+      author {
+        id
+        username
+      }
       comments {
         id
         comment_text
@@ -67,6 +71,7 @@ export const GET_POST = gql`
     }
   }
 `;
+
 
 
 

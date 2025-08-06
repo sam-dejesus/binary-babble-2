@@ -2,17 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_ALL_POSTS } from '../graphQL/queries'; // adjust path if needed
+import {format_date} from '../utils/dateFormat'
 
 const Homepage = () => {
   const { loading, data } = useQuery(QUERY_ALL_POSTS);
 
   const posts = data?.getAllPosts || [];
 
-  const formatDate = (dateStr) => {
-  if (!dateStr) return 'No date';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(); // you can customize formatting here
-};
 
   return (
     <main className="container mt-5">
@@ -35,7 +31,7 @@ const Homepage = () => {
                   </div>
                   <div className="card-body text-dark">
                     <p className="card-label">
-                      Created by: {post.author.username} | Date: {formatDate(post.postDateTime)}
+                      Created by: {post.author.username} | Date: {format_date(post.createdAt)}
                     </p>
                   </div>
                 </div>

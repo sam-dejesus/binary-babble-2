@@ -26,17 +26,7 @@ Comment.init(
         key: "id"
       }
     },
-    comment_date:{
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    comment_time:{
-      type: DataTypes.TIME,
-      allowNull: false
-    },
-    update_date:{
-      type: DataTypes.DATE
-    },
+  
     post_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
