@@ -22,7 +22,7 @@ const Post = () => {
   if (error) return <p>Error loading post: {error.message}</p>;
 
   const post = data?.getPost;
-  console.log(data);
+
 
   if (!post) return <p>Post not found.</p>;
 
@@ -86,7 +86,9 @@ const Post = () => {
             <div className="commentDiv mb-3" key={index}>
               <p className="commentText">{comment.comment_text}</p>
               <p className="commentDate">
-                By {comment.author?.username}{comment.author?.username === post?.author?.username && <span className='text-info'> OP</span>} on {format_date(comment.createdAt)}
+                By {comment.author?.username }{
+                comment.author?.username === post?.author?.username && <span className='text-op'> OP </span>} <></>
+                on {format_date(comment.createdAt)}
               </p>
             </div>
           ))

@@ -70,6 +70,9 @@ padding-left: 30px;
     color: lightgray;
     padding-left: 10px;
 }
+.text-op{
+    color: gold;
+}
 .post-container{
     border: 1px solid lightgray;
     padding: 20px;

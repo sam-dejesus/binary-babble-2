@@ -5,16 +5,13 @@ import { QUERY_ME } from '../graphQL/queries';
 import { DELETE_POST } from '../graphQL/mutations';
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
+import { format_date } from '../utils/dateFormat';
 
 const Dashboard = () => {
   const { loggedIn } = useContext(AuthContext);
   const { loading, error, data, refetch } = useQuery(QUERY_ME);
   const [deletePost] = useMutation(DELETE_POST);
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
-  };
 
   const handleDelete = async (id) => {
     try {
@@ -65,7 +62,7 @@ const Dashboard = () => {
                   {post.title}
                 </Link>
               </h2>
-              <p>Date: {formatDate(post.createdAt)}</p>
+              <p>Date: {format_date(post.createdAt)}</p>
               <Link
                 to={`/editpost/${post.id}`}
                 className="btn btn-outline-warning"
