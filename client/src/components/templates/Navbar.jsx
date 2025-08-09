@@ -1,6 +1,6 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import Auth from '../utils/auth';
-import { AuthContext } from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import Auth from '../../utils/auth';
+import { AuthContext } from '../../context/AuthContext';
 import { useContext } from 'react';
 
 const Navbar = ({ addOn }) => {

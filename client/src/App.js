@@ -10,7 +10,7 @@ import {
 import { AuthProvider } from './context/AuthContext';
 import { setContext } from '@apollo/client/link/context';
 
-import Layout from './components/Layout';
+import Layout from './components/templates/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard'; 
 import Homepage from './pages/Homepage';

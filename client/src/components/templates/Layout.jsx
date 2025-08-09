@@ -8,7 +8,7 @@ const Layout = () => {
   return (
     <div className="bg-dark text-white min-vh-100 d-flex flex-column">
       <header>
-      <Navbar addOn= 'cart'/>
+      <Navbar />
       </header>
 
       <main className="container flex-grow-1" style={{ marginBottom: '15vh' }}>

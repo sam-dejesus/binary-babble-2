@@ -1,14 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_ALL_POSTS } from '../graphQL/queries'; // adjust path if needed
-import {format_date} from '../utils/dateFormat'
+import { QUERY_ALL_POSTS } from '../graphQL/queries';
+import PostList from '../components/single-use-components/PostList';
 
 const Homepage = () => {
   const { loading, data } = useQuery(QUERY_ALL_POSTS);
-
   const posts = data?.getAllPosts || [];
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6; 
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  // Function to change page
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
 
   return (
     <main className="container mt-5">
@@ -17,30 +26,53 @@ const Homepage = () => {
       {loading ? (
         <p className="text-white">Loading posts...</p>
       ) : (
-        <div className="row">
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <div className="col-md-4" key={post.id}>
-                <div className="card mb-3">
-                  <div className="card-header bg-info">
-                    <h2 className="card-title">
-                      <Link to={`/post/${post.id}`} className="text-dark">
-                        {post.title}
-                      </Link>
-                    </h2>
-                  </div>
-                  <div className="card-body text-dark">
-                    <p className="card-label">
-                      Created by: {post.author.username} | Date: {format_date(post.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-white">No posts available.</p>
-          )}
-        </div>
+        <>
+          <PostList
+            posts={posts}
+            currentPage={currentPage}
+            postsPerPage={postsPerPage}
+          />
+
+          {/* Pagination controls */}
+          <nav className="mt-4">
+            <ul className="pagination justify-content-end">
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                <button
+                  className="page-link"
+                  onClick={() => goToPage(currentPage - 1)}
+                >
+                  Previous
+                </button>
+              </li>
+
+              {[...Array(totalPages)].map((_, idx) => {
+                const pageNum = idx + 1;
+                return (
+                  <li
+                    key={pageNum}
+                    className={`page-item ${currentPage === pageNum ? 'active' : ''}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => goToPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                );
+              })}
+
+              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                <button
+                  className="page-link"
+                  onClick={() => goToPage(currentPage + 1)}
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </>
       )}
     </main>
   );
