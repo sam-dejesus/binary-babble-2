@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 
-class Cart extends Model {}
+class Order extends Model {}
 
-Cart.init(
+Order.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -19,6 +19,15 @@ Cart.init(
         key: "id"
       },
       onDelete: "CASCADE"
+    },
+    status: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: "pending"
+    },
+    total_amount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false
     }
   },
   {
@@ -26,8 +35,8 @@ Cart.init(
     timestamps: true,
     freezeTableName: true,
     underscored: true,
-    modelName: "cart"
+    modelName: "order"
   }
 );
 
-module.exports = Cart;
+module.exports = Order;
